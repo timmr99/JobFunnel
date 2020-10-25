@@ -64,7 +64,7 @@ def parse_cli():
                         dest='domain',
                         type=str,
                         required=False,
-                        help='domain value for a region ')   
+                        help='domain value for a region ')
 
     parser.add_argument('-r',
                         dest='random',
@@ -144,6 +144,13 @@ def parse_cli():
                         default=None,
                         help='save duplicates popped by tf_idf filter to file')
 
+    parser.add_argument('--debug',
+                        dest='debug',
+                        action='store_true',
+                        required=False,
+                        default=None,
+                        help='output debugging information')
+
     return parser.parse_args()
 
 
@@ -153,6 +160,7 @@ def cli_to_yaml(cli):
 
     """
     yaml = {
+        'debug': cli.debug,
         'output_path': cli.output_path,
         'search_terms': {
             'region': {
@@ -290,5 +298,8 @@ def parse_config():
     # check if proxy has not been set yet (optional)
     if 'proxy' not in config:
         config['proxy'] = None
+
+    if 'debug' in config and config['debug']:
+        print ('Configuration:\n',yaml.dump(config))
 
     return config

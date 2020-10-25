@@ -1,5 +1,7 @@
 # all paths are relative to this file
 
+debug: False
+
 # paths
 output_path: './'
 

@@ -1,4 +1,5 @@
 CONFIG_TYPES = {
+    'debug': [bool],
     'output_path': [str],
     'providers': [list],
     'search_terms': {
