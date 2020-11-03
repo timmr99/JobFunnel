@@ -1,4 +1,5 @@
 CONFIG_TYPES = {
+    'secrets': [str],
     'debug': [bool],
     'output_path': [str],
     'providers': [list],
@@ -35,6 +36,6 @@ CONFIG_TYPES = {
     ]
 }
 
-PROVIDERS = ['glassdoor', 'indeed', 'monster']
+PROVIDERS = ['glassdoor', 'indeed', 'monster', 'adzuna']
 DOMAINS = ['com', 'ca']
 DELAY_FUN = ['constant', 'linear', 'sigmoid']

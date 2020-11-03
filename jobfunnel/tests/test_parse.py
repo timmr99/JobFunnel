@@ -10,7 +10,7 @@ from ..config.parser import parse_config
 
 config_dict = {
     'output_path': 'fish',
-    'providers': ['Indeed', 'Monster'],
+    'providers': ['Indeed', 'Monster', 'Adzuna'],
     'search_terms': {
         'region': {
             'state': 'NY',

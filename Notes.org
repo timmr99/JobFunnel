@@ -1,0 +1,14 @@
+     _       _     _____                       _   _   _       _
+    | | ___ | |__ |  ___|   _ _ __  _ __   ___| | | \ | | ___ | |_ ___  ___ 
+ _  | |/ _ \| '_ \| |_ | | | | '_ \| '_ \ / _ \ | |  \| |/ _ \| __/ _ \/ __|
+| |_| | (_) | |_) |  _|| |_| | | | | | | |  __/ | | |\  | (_) | ||  __/\__ \
+ \___/ \___/|_.__/|_|   \__,_|_| |_|_| |_|\___|_| |_| \_|\___/ \__\___||___/
+
+⊙ 2020-10-25 16:37:40 Created
+
+⊙ What to do about domains? Get rid of the domain check or just expand domains parameters to include
+   more domains?
+
+⊙ The GlassDoor API has changed and JobFunnel's implementation is broken
+
+

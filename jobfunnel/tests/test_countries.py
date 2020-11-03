@@ -15,8 +15,9 @@ from ..config.parser import parse_config
 from ..indeed import Indeed
 from ..monster import Monster
 from ..glassdoor import GlassDoor
+from ..adzuna import Adzuna
 
-PROVIDERS = {'indeed': Indeed, 'monster': Monster, 'glassdoor': GlassDoor}
+PROVIDERS = {'indeed': Indeed, 'monster': Monster, 'glassdoor': GlassDoor, 'adzuna': Adzuna}
 
 DOMAINS = {'America': 'com', 'Canada': 'ca'}
 
@@ -48,7 +49,7 @@ def test_cities(city, delay=1):
     """tests american city"""
     count = 0  # a count of providers with successful test cases
     for p in config['providers']:
-        provider: Union[GlassDoor, Monster, Indeed] = PROVIDERS[p](config)
+        provider: Union[GlassDoor, Monster, Indeed, Adzuna] = PROVIDERS[p](config)
         provider.search_terms['region']['domain'] = DOMAINS[city['country']]
         provider.search_terms['region']['province'] = city['abbreviation']
         provider.search_terms['region']['city'] = city['city']
@@ -59,6 +60,12 @@ def test_cities(city, delay=1):
             # get the html data, initialize bs4 with lxml
             request_html = get(search, headers=provider.headers)
         elif isinstance(provider, Monster):
+            # get search url
+            search = provider.get_search_url()
+
+            # get the html data, initialize bs4 with lxml
+            request_html = get(search, headers=provider.headers)
+        elif isinstance(provider, Adzuna):
             # get search url
             search = provider.get_search_url()
 

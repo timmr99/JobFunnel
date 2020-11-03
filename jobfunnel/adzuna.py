@@ -6,23 +6,25 @@ from logging import info as log_info
 from math import ceil
 from time import sleep, time
 
-from .jobfunnel import JobFunnel, MASTERLIST_HEADER
-from .tools.tools import filter_non_printables
-from .tools.tools import post_date_from_relative_post_age
+from jobfunnel.jobfunnel import JobFunnel, MASTERLIST_HEADER
+from jobfunnel.tools.tools import filter_non_printables
+from jobfunnel.tools.tools import post_date_from_relative_post_age
 
+from decimal import Decimal
+from datetime import datetime, date
 
-class Monster(JobFunnel):
+class Adzuna(JobFunnel):
 
     def __init__(self, args):
         super().__init__(args)
-        self.provider = 'monster'
+        self.provider = 'adzuna'
         self.max_results_per_page = 25
         self.headers = {
             'accept': 'text/html,application/xhtml+xml,application/xml;'
                       'q=0.9,image/webp,*/*;q=0.8',
             'accept-encoding': 'gzip, deflate, sdch, br',
             'accept-language': 'en-GB,en-US;q=0.8,en;q=0.6',
-            'referer': 'https://www.monster.{0}/'.format(
+            'referer': 'https://www.adzuna.{0}/'.format(
                 self.search_terms['region']['domain']),
             'upgrade-insecure-requests': '1',
             'user-agent': self.user_agent,
@@ -30,6 +32,8 @@ class Monster(JobFunnel):
             'Connection': 'keep-alive'
         }
         self.query = '-'.join(self.search_terms['keywords'])
+
+        self.dump(self)
 
     def convert_radius(self, radius):
         """function that quantizes the user input radius to a valid radius
@@ -75,8 +79,10 @@ class Monster(JobFunnel):
 
         return radius
 
+# http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={YOUR API ID}&app_key={YOUR API KEY}&results_per_page=20&what=javascript%20developer&content-type=application/json
+# https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=68d51893&app_key=8f00014c5b4205508c47195fcee04bc1&results_per_page=10&what=remote&where=Denver%2C%20Colorado&distance=15&max_days_old=30
     def get_search_url(self, method='get'):
-        """gets the monster request html"""
+        """gets the adzuna request html"""
         # form job search url
         if method == 'get':
             search = ('https://www.monster.{0}/jobs/search/?'
@@ -238,3 +244,40 @@ class Monster(JobFunnel):
             # end and print recorded time
             end = time()
             print(f'{self.provider} scrape job took {(end - start):.3f}s')
+
+    def dump(self, obj):
+
+        if obj is None:
+            return "undef"
+    
+        if isinstance(obj, dict):
+            return self.dump_dict(obj)
+    
+        if isinstance(obj, (list, tuple)):
+            return self.dump_list(obj)
+    
+        if isinstance(obj, Decimal):
+            return "'{:.05f}'".format(obj)
+            # ... or handle it your way
+    
+        if isinstance(obj, (datetime, date)):
+            return "'{}'".format(obj.isoformat(
+                sep=' ',
+                timespec='milliseconds'))
+            # ... or handle it your way
+    
+        return "'{}'".format(obj)
+    
+    def dump_dict(self, obj):
+        result = []
+        for key, val in obj.items():
+            result.append(' => '.join((self.dump(key), self.dump(val))))
+    
+        return ' '.join(('{', ', '.join(result), '}'))
+    
+    def dump_list(self, obj):
+        result = []
+        for val in obj:
+            result.append(self.dump(val))
+    
+        return ' '.join(('[', ', '.join(result), ']'))

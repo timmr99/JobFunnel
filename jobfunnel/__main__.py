@@ -5,15 +5,18 @@ import sys
 
 from typing import Union
 
-from .config.parser import parse_config, ConfigError
-from .config.validate import validate_config
+from jobfunnel.config.parser import parse_config, ConfigError
+from jobfunnel.config.validate import validate_config
 
-from .jobfunnel import JobFunnel
-from .indeed import Indeed
-from .monster import Monster
-from .glassdoor import GlassDoor
+from jobfunnel.indeed import Indeed
+from jobfunnel.monster import Monster
+from jobfunnel.glassdoor import GlassDoor
+from jobfunnel.adzuna import Adzuna
 
-PROVIDERS = {'indeed': Indeed, 'monster': Monster, 'glassdoor': GlassDoor}
+PROVIDERS = {'indeed': Indeed,
+             'monster': Monster,
+             'glassdoor': GlassDoor,
+             'adzuna': Adzuna}
 
 
 def main():
@@ -39,7 +42,7 @@ def main():
         jf.load_pickle(config)
     else:
         for p in config['providers']:
-            provider: Union[GlassDoor, Monster, Indeed] = PROVIDERS[p](config)
+            provider: Union[GlassDoor, Monster, Indeed, Adzuna] = PROVIDERS[p](config)
             provider_id = provider.__class__.__name__
             try:
                 provider.scrape()

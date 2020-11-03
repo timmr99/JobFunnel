@@ -7,9 +7,9 @@ from math import ceil
 from requests import post
 from time import sleep, time
 
-from .jobfunnel import JobFunnel, MASTERLIST_HEADER
-from .tools.tools import filter_non_printables
-from .tools.tools import post_date_from_relative_post_age
+from jobfunnel.jobfunnel import JobFunnel, MASTERLIST_HEADER
+from jobfunnel.tools.tools import filter_non_printables
+from jobfunnel.tools.tools import post_date_from_relative_post_age
 
 
 class GlassDoor(JobFunnel):
@@ -107,7 +107,9 @@ class GlassDoor(JobFunnel):
 
         # get the location id for search location
         location_response = \
-            self.s.post(location_url, headers=self.location_headers, data=data).json()
+            self.session.post(location_url,
+                              headers=self.location_headers,
+                              data=data).json()
 
         if method == 'get':
             # @TODO implement get style for glassdoor
@@ -137,7 +139,10 @@ class GlassDoor(JobFunnel):
         log_info(f'getting glassdoor page {page} : {url}')
 
         job = BeautifulSoup(
-            self.s.post(url, headers=self.headers, data=data).text, self.bs4_parser).\
+            self.session.post(url,
+                              headers=self.headers,
+                              data=data).text,
+            self.bs4_parser).\
             find_all('li', attrs={'class', 'jl'})
         job_soup_list.extend(job)
 
@@ -146,7 +151,7 @@ class GlassDoor(JobFunnel):
         search = job['link']
         log_info(f'getting glassdoor search: {search}')
         job_link_soup = BeautifulSoup(
-            self.s.post(search, headers=self.location_headers).text, self.bs4_parser)
+            self.session.post(search, headers=self.location_headers).text, self.bs4_parser)
 
         try:
             job['blurb'] = job_link_soup.find(
@@ -165,7 +170,7 @@ class GlassDoor(JobFunnel):
         search = job['link']
         log_info(f'delay of {delay:.2f}s, getting glassdoor search: {search}')
 
-        res = self.s.post(search, headers=self.location_headers).text
+        res = self.session.post(search, headers=self.location_headers).text
         return job, res
 
     def parse_blurb(self, job, html):
@@ -188,7 +193,6 @@ class GlassDoor(JobFunnel):
         search, data = self.get_search_url(method='post')
 
         # get the html data, initialize bs4 with lxml
-        request_html = self.s.post(search, headers=self.headers, data=data)
 
         # create the soup base
         soup_base = BeautifulSoup(request_html.text, self.bs4_parser)

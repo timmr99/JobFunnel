@@ -6,8 +6,7 @@ import logging
 import os
 import yaml
 
-from .valid_options import CONFIG_TYPES
-from ..tools.tools import split_url
+from jobfunnel.config.valid_options import CONFIG_TYPES
 
 log_levels = {'critical': logging.CRITICAL, 'error': logging.ERROR,
               'warning': logging.WARNING, 'info': logging.INFO,
@@ -151,6 +150,13 @@ def parse_cli():
                         default=None,
                         help='output debugging information')
 
+    parser.add_argument('--secrets',
+                        dest='secrets',
+                        type=str,
+                        required=False,
+                        default=None,
+                        help='path to secrets file')
+
     return parser.parse_args()
 
 
@@ -160,6 +166,7 @@ def cli_to_yaml(cli):
 
     """
     yaml = {
+        'secrets': cli.secrets,
         'debug': cli.debug,
         'output_path': cli.output_path,
         'search_terms': {

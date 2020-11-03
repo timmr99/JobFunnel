@@ -1,6 +1,3 @@
-# This is the default settings file. Do not edit.
-
-# all paths are relative to this file
 
 # paths
 output_path: 'search'
@@ -10,6 +7,7 @@ providers:
   - 'Indeed'
   - 'Monster'
   - 'GlassDoor'
+  - 'Adzuna'
 
 # filters
 search_terms:
